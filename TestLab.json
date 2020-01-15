@@ -4,18 +4,12 @@
 
     "variables": {
         "storageAccountName": "[concat(uniquestring(resourceGroup().id), [parameters('ResourceGName')])]",
-        "virtualNetworkName": "dftgu-vNet",
-        "subnetName": "dftgu-subnet",
-        "addressPrefix": "10.0.0.0/16",
-        "subnetPrefix": "10.0.0.0/24",
         "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', [parameters('virtualNetworkName')], [parameters('subnetName')])]",
-        "adminUserName": "devops",
-        "adminPassword": "D3v0psAllTheThings!"
     },
     "resources": [{
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2018-11-01",
-            "name": "[variables('storageAccountName')]",
+            "name": "[parameters('storageAccountName')]",
             "location": "[parameters('location')]",
             "sku": {
                 "name": "Standard_LRS"
@@ -43,18 +37,18 @@
         {
             "type": "Microsoft.Network/virtualNetworks",
             "apiVersion": "2018-11-01",
-            "name": "[variables('virtualNetworkName')]",
+            "name": "[parameters('virtualNetworkName')]",
             "location": "[parameters('location')]",
             "properties": {
                 "addressSpace": {
                     "addressPrefixes": [
-                        "[variables('addressPrefix')]"
+                        "[parameters('addressPrefix')]"
                     ]
                 },
                 "subnets": [{
-                    "name": "[variables('subnetName')]",
+                    "name": "[parameters('subnetName')]",
                     "properties": {
-                        "addressPrefix": "[variables('subnetPrefix')]"
+                        "addressPrefix": "[parameters('subnetPrefix')]"
                     }
                 }]
             }
@@ -66,7 +60,7 @@
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/publicIPAddresses/', 'WIN10-pubip')]",
-                "[resourceId('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
+                "[resourceId('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]"
             ],
             "properties": {
                 "ipConfigurations": [{
@@ -77,7 +71,7 @@
                             "id": "[resourceId('Microsoft.Network/publicIPAddresses','WIN10-pubip')]"
                         },
                         "subnet": {
-                            "id": "[variables('subnetRef')]"
+                            "id": "[parameters('subnetRef')]"
                         }
                     }
                 }]
@@ -90,7 +84,7 @@
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/publicIPAddresses/', 'WINSRV19-pubip')]",
-                "[resourceId('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
+                "[resourceId('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]"
             ],
             "properties": {
                 "ipConfigurations": [{
@@ -101,7 +95,7 @@
                             "id": "[resourceId('Microsoft.Network/publicIPAddresses','WINSRV19-pubip')]"
                         },
                         "subnet": {
-                            "id": "[variables('subnetRef')]"
+                            "id": "[parameters('subnetRef')]"
                         }
                     }
                 }]
@@ -113,7 +107,7 @@
             "name": "WIN10",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts/', parameters('storageAccountName'))]",
                 "[resourceId('Microsoft.Network/networkInterfaces/', 'WIN10-nic')]"
             ],
             "properties": {
@@ -122,8 +116,8 @@
                 },
                 "osProfile": {
                     "computerName": "WIN10",
-                    "adminUsername": "[variables('adminUsername')]",
-                    "adminPassword": "[variables('adminPassword')]"
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPassword')]"
                 },
                 "storageProfile": {
                     "imageReference": {
@@ -154,7 +148,7 @@
             "name": "WINSRV19",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts/', parameters('storageAccountName'))]",
                 "[resourceId('Microsoft.Network/networkInterfaces/', 'WINSRV19-nic')]"
             ],
             "properties": {
@@ -163,8 +157,8 @@
                 },
                 "osProfile": {
                     "computerName": "WINSRV19",
-                    "adminUsername": "[variables('adminUsername')]",
-                    "adminPassword": "[variables('adminPassword')]"
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPassword')]"
                 },
                 "storageProfile": {
                     "imageReference": {
