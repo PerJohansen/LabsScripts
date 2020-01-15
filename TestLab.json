@@ -1,20 +1,14 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {
-        "location": {
-            "type": "string",
-            "defaultValue": "East US"
-        }
-    },
 
     "variables": {
-        "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'dftgu')]",
+        "storageAccountName": "[concat(uniquestring(resourceGroup().id), [parameters('ResourceGName')])]",
         "virtualNetworkName": "dftgu-vNet",
         "subnetName": "dftgu-subnet",
         "addressPrefix": "10.0.0.0/16",
         "subnetPrefix": "10.0.0.0/24",
-        "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]",
+        "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', [parameters('virtualNetworkName')], [parameters('subnetName')])]",
         "adminUserName": "devops",
         "adminPassword": "D3v0psAllTheThings!"
     },
