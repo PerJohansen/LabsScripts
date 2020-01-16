@@ -29,9 +29,15 @@
     },
 
     "variables": {
+	    "NameWin10Nr1": "[concat(parameters('ResourceGName'), '-Win10Nr1')]",
+		"NameWin10Nr1PubIp": "[concat(variables('NameWin10Nr1'), '-PubIP')]",
+		"NameWin10Nr1NIC": "[concat(variables('NameWin10Nr1'), '-NIC')]",
         "NameWinSrv19Nr1": "[concat(parameters('ResourceGName'), '-WinSrv19Nr1')]",
 		"NameWinSrv19Nr1PubIp": "[concat(variables('NameWinSrv19Nr1'), '-PubIP')]",
 		"NameWinSrv19Nr1NIC": "[concat(variables('NameWinSrv19Nr1'), '-NIC')]",
+		"NameWinSrv19Nr2": "[concat(parameters('ResourceGName'), '-WinSrv19Nr2')]",
+		"NameWinSrv19Nr2PubIp": "[concat(variables('NameWinSrv19Nr2'), '-PubIP')]",
+		"NameWinSrv19Nr2NIC": "[concat(variables('NameWinSrv19Nr2'), '-NIC')]",
         "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'testlab')]",
         "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]",
     },
@@ -49,7 +55,7 @@
         {
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "2018-11-01",
-            "name": "WIN10-pubip",
+            "name": "[variables('NameWin10Nr1PubIp')]",
             "location": "[parameters('location')]",
             "properties": {
                 "publicIPAllocationMethod": "Dynamic"
@@ -58,6 +64,14 @@
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "2018-11-01",
             "name": "[variables('NameWinSrv19Nr1PubIp')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "publicIPAllocationMethod": "Dynamic"
+            }
+        },{
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2018-11-01",
+            "name": "[variables('NameWinSrv19Nr2PubIp')]",
             "location": "[parameters('location')]",
             "properties": {
                 "publicIPAllocationMethod": "Dynamic"
@@ -85,10 +99,10 @@
         {
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2018-11-01",
-            "name": "WIN10-nic",
+            "name": "[variables('NameWin10Nr1NIC')]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/publicIPAddresses/', 'WIN10-pubip')]",
+                "[resourceId('Microsoft.Network/publicIPAddresses/', variables('NameWin10Nr1PubIp'))]",
                 "[resourceId('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]"
             ],
             "properties": {
@@ -130,21 +144,45 @@
                 }]
             }
         },
+		{
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2018-11-01",
+            "name": "[variables('NameWinSrv19Nr2NIC')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses/', variables('NameWinSrv19Nr2PubIp'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]"
+            ],
+            "properties": {
+                "ipConfigurations": [{
+                    "name": "ipconfig1",
+                    "properties": {
+                        "privateIPAllocationMethod": "Dynamic",
+                        "publicIPAddress": {
+                            "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('NameWinSrv19Nr2PubIp'))]"
+                        },
+                        "subnet": {
+                            "id": "[variables('subnetRef')]"
+                        }
+                    }
+                }]
+            }
+        },
         {
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2018-10-01",
-            "name": "WIN10",
+            "name": "[variables('NameWin10Nr1')]",
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Network/networkInterfaces/', 'WIN10-nic')]"
+                "[resourceId('Microsoft.Network/networkInterfaces/', variables('NameWin10Nr1NIC'))]"
             ],
             "properties": {
                 "hardwareProfile": {
                     "vmSize": "Standard_A2"
                 },
                 "osProfile": {
-                    "computerName": "WIN10",
+                    "computerName": "Win10Nr1",
                     "adminUsername": "[parameters('AzureAdminUserName')]",
                     "adminPassword": "[parameters('AzureAdminUserPassword')]"
                 },
@@ -166,7 +204,7 @@
                 },
                 "networkProfile": {
                     "networkInterfaces": [{
-                        "id": "[resourceId('Microsoft.Network/networkInterfaces','WIN10-nic')]"
+                        "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('NameWin10Nr1NIC'))]"
                     }]
                 }
             }
@@ -185,7 +223,7 @@
                     "vmSize": "Standard_A2"
                 },
                 "osProfile": {
-                    "computerName": "[variables('NameWinSrv19Nr1')]",
+                    "computerName": "WinSrv19Nr1",
                     "adminUsername": "[parameters('AzureAdminUserName')]",
                     "adminPassword": "[parameters('AzureAdminUserPassword')]"
                 },
@@ -211,16 +249,62 @@
                     }]
                 }
             }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2018-10-01",
+            "name": "[variables('NameWinSrv19Nr2')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Network/networkInterfaces/', variables('NameWinSrv19Nr2NIC'))]"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_A2"
+                },
+                "osProfile": {
+                    "computerName": "WinSrv19Nr2",
+                    "adminUsername": "[parameters('AzureAdminUserName')]",
+                    "adminPassword": "[parameters('AzureAdminUserPassword')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "2019-Datacenter",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "createOption": "FromImage"
+                    },
+                    "dataDisks": [{
+                        "diskSizeGB": 100,
+                        "lun": 0,
+                        "createOption": "Empty"
+                    }]
+                },
+                "networkProfile": {
+                    "networkInterfaces": [{
+                        "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('NameWinSrv19Nr2NIC'))]"
+                    }]
+                }
+            }
         }
     ],
     "outputs": {
         "WIN10Nr1PublicIP": {
             "type": "string",
-            "value": "[resourceId('Microsoft.Network/publicIPAddresses','WIN10-pubip')]"
+            "value": "[resourceId('Microsoft.Network/publicIPAddresses',variables('NameWin10Nr1PubIp'))]"
         },
         "WINSRV19Nr1PublicIP": {
             "type": "string",
             "value": "[resourceId('Microsoft.Network/publicIPAddresses',variables('NameWinSrv19Nr1PubIp'))]"
+        },
+        "WINSRV19Nr2PublicIP": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Network/publicIPAddresses',variables('NameWinSrv19Nr2PubIp'))]"
         }
+    }
     }
 }
