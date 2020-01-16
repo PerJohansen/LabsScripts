@@ -220,7 +220,7 @@
             ],
             "properties": {
                 "hardwareProfile": {
-                    "vmSize": "Standard_A2"
+                    "vmSize": "Standard_B2S"
                 },
                 "osProfile": {
                     "computerName": "WinSrv19Nr1",
@@ -261,7 +261,7 @@
             ],
             "properties": {
                 "hardwareProfile": {
-                    "vmSize": "Standard_A2"
+                    "vmSize": "Standard_B2S"
                 },
                 "osProfile": {
                     "computerName": "WinSrv19Nr2",
