@@ -29,6 +29,9 @@
     },
 
     "variables": {
+        "NameWinSrv19Nr1": "[concat(parameters('ResourceGName'), '-WinSrv19Nr1')]",
+		"NameWinSrv19Nr1PubIp": "[concat(variables('NameWinSrv19Nr1'), '-PubIP')]",
+		"NameWinSrv19Nr1NIC": "[concat(variables('NameWinSrv19Nr1'), '-NIC')]",
         "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'testlab')]",
         "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]",
     },
@@ -54,7 +57,7 @@
         }, {
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "2018-11-01",
-            "name": "WINSRV19-pubip",
+            "name": "[variables('NameWinSrv19Nr1PubIp')]",
             "location": "[parameters('location')]",
             "properties": {
                 "publicIPAllocationMethod": "Dynamic"
@@ -106,10 +109,10 @@
         {
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2018-11-01",
-            "name": "WINSRV19-nic",
+            "name": "[variables('NameWinSrv19Nr1NIC')]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/publicIPAddresses/', 'WINSRV19-pubip')]",
+                "[resourceId('Microsoft.Network/publicIPAddresses/', variables('NameWinSrv19Nr1PubIp'))]",
                 "[resourceId('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]"
             ],
             "properties": {
@@ -118,7 +121,7 @@
                     "properties": {
                         "privateIPAllocationMethod": "Dynamic",
                         "publicIPAddress": {
-                            "id": "[resourceId('Microsoft.Network/publicIPAddresses','WINSRV19-pubip')]"
+                            "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('NameWinSrv19Nr1PubIp'))]"
                         },
                         "subnet": {
                             "id": "[variables('subnetRef')]"
@@ -171,18 +174,18 @@
         {
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2018-10-01",
-            "name": "WINSRV19",
+            "name": "[variables('NameWinSrv19Nr1')]",
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Network/networkInterfaces/', 'WINSRV19-nic')]"
+                "[resourceId('Microsoft.Network/networkInterfaces/', variables('NameWinSrv19Nr1NIC'))]"
             ],
             "properties": {
                 "hardwareProfile": {
                     "vmSize": "Standard_A2"
                 },
                 "osProfile": {
-                    "computerName": "WINSRV19",
+                    "computerName": "[variables('NameWinSrv19Nr1')]",
                     "adminUsername": "[parameters('AzureAdminUserName')]",
                     "adminPassword": "[parameters('AzureAdminUserPassword')]"
                 },
@@ -204,20 +207,20 @@
                 },
                 "networkProfile": {
                     "networkInterfaces": [{
-                        "id": "[resourceId('Microsoft.Network/networkInterfaces','WINSRV19-nic')]"
+                        "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('NameWinSrv19Nr1NIC'))]"
                     }]
                 }
             }
         }
     ],
     "outputs": {
-        "WIN10PublicIP": {
+        "WIN10Nr1PublicIP": {
             "type": "string",
             "value": "[resourceId('Microsoft.Network/publicIPAddresses','WIN10-pubip')]"
         },
-        "WINSRV19PublicIP": {
+        "WINSRV19Nr1PublicIP": {
             "type": "string",
-            "value": "[resourceId('Microsoft.Network/publicIPAddresses','WINSRV19-pubip')]"
+            "value": "[resourceId('Microsoft.Network/publicIPAddresses',variables('NameWinSrv19Nr1PubIp'))]"
         }
     }
 }
