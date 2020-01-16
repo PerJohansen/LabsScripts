@@ -111,7 +111,7 @@
                     "properties": {
                         "privateIPAllocationMethod": "Dynamic",
                         "publicIPAddress": {
-                            "id": "[resourceId('Microsoft.Network/publicIPAddresses','WIN10-pubip')]"
+                            "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('NameWin10Nr1PubIp'))]"
                         },
                         "subnet": {
                             "id": "[variables('subnetRef')]"
@@ -295,15 +295,15 @@
     "outputs": {
         "WIN10Nr1PublicIP": {
             "type": "string",
-            "value": "[resourceId('Microsoft.Network/publicIPAddresses',variables('NameWin10Nr1PubIp'))]"
+            "value": "[resourceId('Microsoft.Network/publicIPAddresses', variables('NameWin10Nr1PubIp'))]"
         },
         "WINSRV19Nr1PublicIP": {
             "type": "string",
-            "value": "[resourceId('Microsoft.Network/publicIPAddresses',variables('NameWinSrv19Nr1PubIp'))]"
+            "value": "[resourceId('Microsoft.Network/publicIPAddresses', variables('NameWinSrv19Nr1PubIp'))]"
         },
         "WINSRV19Nr2PublicIP": {
             "type": "string",
-            "value": "[resourceId('Microsoft.Network/publicIPAddresses',variables('NameWinSrv19Nr2PubIp'))]"
+            "value": "[resourceId('Microsoft.Network/publicIPAddresses', variables('NameWinSrv19Nr2PubIp'))]"
         }
     }
 }
