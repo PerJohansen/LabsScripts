@@ -30,7 +30,7 @@
 
     "variables": {
         "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'testlab')]",
-        "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', paramaters('virtualNetworkName'), paramaters('subnetName'))]",
+        "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', [parameters('virtualNetworkName')], [parameters('subnetName')])]",
     },
     "resources": [{
             "type": "Microsoft.Storage/storageAccounts",
