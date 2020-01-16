@@ -306,5 +306,4 @@
             "value": "[resourceId('Microsoft.Network/publicIPAddresses',variables('NameWinSrv19Nr2PubIp'))]"
         }
     }
-    }
 }
