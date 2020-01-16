@@ -29,8 +29,8 @@
     },
 
     "variables": {
-        "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'dftgu')]",
-        "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'dftgu-vNet', 'dftgu-subnet')]",
+        "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'testlab')]",
+        "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', paramaters('virtualNetworkName'), paramaters('subnetName'))]",
     },
     "resources": [{
             "type": "Microsoft.Storage/storageAccounts",
