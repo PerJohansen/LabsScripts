@@ -97,7 +97,7 @@
                             "id": "[resourceId('Microsoft.Network/publicIPAddresses','WIN10-pubip')]"
                         },
                         "subnet": {
-                            "id": "[parameters('subnetRef')]"
+                            "id": "[variables('subnetRef')]"
                         }
                     }
                 }]
@@ -142,8 +142,8 @@
                 },
                 "osProfile": {
                     "computerName": "WIN10",
-                    "adminUsername": "[parameters('adminUsername')]",
-                    "adminPassword": "[parameters('adminPassword')]"
+                    "adminUsername": "[parameters('AzureAdminUserName')]",
+                    "adminPassword": "[parameters('AzureAdminUserPassword')]"
                 },
                 "storageProfile": {
                     "imageReference": {
@@ -183,8 +183,8 @@
                 },
                 "osProfile": {
                     "computerName": "WINSRV19",
-                    "adminUsername": "[parameters('adminUsername')]",
-                    "adminPassword": "[parameters('adminPassword')]"
+                    "adminUsername": "[parameters('AzureAdminUserName')]",
+                    "adminPassword": "[parameters('AzureAdminUserPassword')]"
                 },
                 "storageProfile": {
                     "imageReference": {
