@@ -25,6 +25,24 @@
          },
          "subnetPrefix": {
             "type": "string"
+         },
+         "AutoShutdownStatus": {
+            "type": "string"
+         },
+         "AutoShutdownTime": {
+            "type": "string"
+         },
+         "AutoShutdownTimeZone": {
+            "type": "string"
+         },
+         "AutoShutdownNotificationStatus": {
+            "type": "string"
+         },
+         "AutoShutdownNotificationLocale": {
+            "type": "string"
+         },
+         "AutoShutdownNotificationEmail": {
+            "type": "string"
          }
     },
 
@@ -207,6 +225,30 @@
                         "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('NameWin10Nr1NIC'))]"
                     }]
                 }
+			},
+        },
+		{
+            "name": "[concat('shutdown-computevm-', variables('NameWin10Nr1'))]",
+            "type": "Microsoft.DevTestLab/schedules",
+            "apiVersion": "2017-04-26-preview",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Compute/virtualMachines/', variables('NameWin10Nr1'))]"
+            ],
+            "properties": {
+                "status": "[parameters('AutoShutdownStatus')]",
+                "taskType": "ComputeVmShutdownTask",
+                "dailyRecurrence": {
+                    "time": "[parameters('AutoShutdownTime')]"
+                },
+                "timeZoneId": "[parameters('AutoShutdownTimeZone')]",
+                "targetResourceId": "[resourceId('Microsoft.Compute/virtualMachines', variables('NameWin10Nr1'))]",
+                "notificationSettings": {
+                    "status": "[parameters('AutoShutdownNotificationStatus')]",
+                    "notificationLocale": "[parameters('AutoShutdownNotificationLocale')]",
+                    "timeInMinutes": "30",
+                    "emailRecipient": "[parameters('AutoShutdownNotificationEmail')]"
+                }
             }
         },
         {
@@ -220,7 +262,7 @@
             ],
             "properties": {
                 "hardwareProfile": {
-                    "vmSize": "Standard_B2S"
+                    "vmSize": "Standard_D2s_v3"
                 },
                 "osProfile": {
                     "computerName": "WinSrv19Nr1",
@@ -247,6 +289,30 @@
                     "networkInterfaces": [{
                         "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('NameWinSrv19Nr1NIC'))]"
                     }]
+                },
+			}
+        },
+		{
+            "name": "[concat('shutdown-computevm-', variables('NameWinSrv19Nr1'))]",
+            "type": "Microsoft.DevTestLab/schedules",
+            "apiVersion": "2017-04-26-preview",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Compute/virtualMachines/', variables('NameWinSrv19Nr1'))]"
+            ],
+            "properties": {
+                "status": "[parameters('AutoShutdownStatus')]",
+                "taskType": "ComputeVmShutdownTask",
+                "dailyRecurrence": {
+                    "time": "[parameters('AutoShutdownTime')]"
+                },
+                "timeZoneId": "[parameters('AutoShutdownTimeZone')]",
+                "targetResourceId": "[resourceId('Microsoft.Compute/virtualMachines', variables('NameWinSrv19Nr1'))]",
+                "notificationSettings": {
+                    "status": "[parameters('AutoShutdownNotificationStatus')]",
+                    "notificationLocale": "[parameters('AutoShutdownNotificationLocale')]",
+                    "timeInMinutes": "30",
+                    "emailRecipient": "[parameters('AutoShutdownNotificationEmail')]"
                 }
             }
         },
@@ -261,12 +327,12 @@
             ],
             "properties": {
                 "hardwareProfile": {
-                    "vmSize": "Standard_B2S"
+                    "vmSize": "Standard_D2s_v3"
                 },
                 "osProfile": {
                     "computerName": "WinSrv19Nr2",
                     "adminUsername": "[parameters('AzureAdminUserName')]",
-                    "adminPassword": "[parameters('AzureAdminUserPassword')]"
+                    "adminPassword": "[parameters('AzureAdminUserPassword')]"					
                 },
                 "storageProfile": {
                     "imageReference": {
@@ -289,6 +355,30 @@
                         "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('NameWinSrv19Nr2NIC'))]"
                     }]
                 }
+			}
+        },
+		{
+            "name": "[concat('shutdown-computevm-', variables('NameWinSrv19Nr2'))]",
+            "type": "Microsoft.DevTestLab/schedules",
+            "apiVersion": "2017-04-26-preview",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Compute/virtualMachines/', variables('NameWinSrv19Nr2'))]"
+            ],
+            "properties": {
+                "status": "[parameters('AutoShutdownStatus')]",
+                "taskType": "ComputeVmShutdownTask",
+                "dailyRecurrence": {
+                    "time": "[parameters('AutoShutdownTime')]"
+                },
+                "timeZoneId": "[parameters('AutoShutdownTimeZone')]",
+                "targetResourceId": "[resourceId('Microsoft.Compute/virtualMachines', variables('NameWinSrv19Nr2'))]",
+                "notificationSettings": {
+                    "status": "[parameters('AutoShutdownNotificationStatus')]",
+                    "notificationLocale": "[parameters('AutoShutdownNotificationLocale')]",
+                    "timeInMinutes": "30",
+                    "emailRecipient": "[parameters('AutoShutdownNotificationEmail')]"
+                }
             }
         }
     ],
@@ -307,3 +397,4 @@
         }
     }
 }
+
